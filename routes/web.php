@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\authController;
+use App\Http\Controllers\adminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+//Authentication Routes
+    Route::get('/login', [authController::class, 'login'])->name('login');
+    Route::post('/login', [authController::class, 'loginAttempt']);
+
+
+//Authenticated Routes
+    Route::middleware('adminAuth')->group(function(){
+        Route::get('/{any}', [adminController::class, 'index'])->where('any', '.*');
+    });
+
